@@ -3,7 +3,7 @@
 #include <random>
 #include <algorithm>
 #define MAX_RAND 1e5
-#define N 5
+#define N 1e1
 using namespace std;
 
 void bubble_sort(vector<double> &vec){
@@ -57,6 +57,27 @@ void merge_sort(vector<double> &vec, int start, int end){
     }
 }
 
+int partition (vector<double> &vec, int start, int end){
+    // last element pivoting
+    int i = start-1;
+    for (int j = start; j < end; j++){
+        if (vec[j] < vec[end]){
+            i++;
+            swap(vec[i], vec[j]);
+        }
+    }
+    swap(vec[i + 1], vec[end]);
+    return i+1;
+}
+
+void quick_sort(vector<double> &vec, int start, int end){
+    if(start < end){
+        int p = partition(vec, start, end);
+        quick_sort(vec, start, p - 1);
+        quick_sort(vec, p + 1, end);
+    }
+}
+
 int main(){
     vector<double> vec(N);
     random_device rd;
@@ -64,10 +85,15 @@ int main(){
     uniform_real_distribution<double> dist(-MAX_RAND, MAX_RAND);
     auto gen_rand = [&dist, &rng](){return dist(rng);};
     generate(vec.begin(), vec.end(), gen_rand);
-    //sort(vec.rbegin(), vec.rend());
-    vector<double> bubble_vec(vec), merge_vec(vec);;
+    for(double val :vec) cout << val << " ";
+    cout << "\n";
+    vector<double> bubble_vec(vec), merge_vec(vec), quick_vec(vec);
 
-    bubble_sort(bubble_vec);
+    //quick_sort(quick_vec, 0, quick_vec.size() - 1);
+    for(double val :quick_vec) cout << val << " ";
+    cout << "\n";
+
+    //bubble_sort(bubble_vec);
     for(double val : bubble_vec) cout << val << " ";
     cout << "\n";
 
