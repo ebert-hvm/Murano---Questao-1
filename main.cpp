@@ -2,7 +2,6 @@
 #include <vector>
 #include <random>
 #include <algorithm>
-#define MAX_RAND 1e5
 using namespace std;
 
 void bubble_sort(vector<double> &vec){
@@ -78,13 +77,14 @@ void quick_sort(vector<double> &vec, int start, int end){
 }
 
 const int n = 1e1;
+const int max_rand = 1e5;
 
 int main(){
     vector<double> vec(n);
     random_device rd;
     mt19937 rng(rd());
-    uniform_real_distribution<double> dist(-MAX_RAND, MAX_RAND);
-    auto gen_rand = [&dist, &rng](){return dist(rng);};
+    uniform_int_distribution<long> dist(-max_rand, max_rand);
+    auto gen_rand = [&dist, &rng](){return (double)dist(rng)/dist(rng);};
     generate(vec.begin(), vec.end(), gen_rand);
 
     vector<double> bubble_vec(vec), merge_vec(vec), quick_vec(vec);
