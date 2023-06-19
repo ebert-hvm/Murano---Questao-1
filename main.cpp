@@ -2,9 +2,10 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <chrono>
 using namespace std;
 
-void bubble_sort(vector<double> &vec){
+void bubble_sort(vector<float> &vec){
     int swap_count;
     for(int i = 0; i < vec.size() - 1; i++){
         swap_count = 0;
@@ -16,8 +17,8 @@ void bubble_sort(vector<double> &vec){
     }
 }
 
-void merge(vector<double> &vec, int start, int mid, int end){
-    vector<double> left, right;
+void merge(vector<float> &vec, int start, int mid, int end){
+    vector<float> left, right;
     for(int i=start;i<=end;i++){
         if(i <= mid) left.push_back(vec[i]);
         else right.push_back(vec[i]);
@@ -46,7 +47,7 @@ void merge(vector<double> &vec, int start, int mid, int end){
     }
 }
 
-void merge_sort(vector<double> &vec, int start, int end){
+void merge_sort(vector<float> &vec, int start, int end){
     if(start < end){
         int mid = start + (end - start)/2;
         merge_sort(vec, start, mid);
@@ -55,7 +56,7 @@ void merge_sort(vector<double> &vec, int start, int end){
     }
 }
 
-int partition (vector<double> &vec, int start, int end){
+int partition (vector<float> &vec, int start, int end){
     // last element pivoting
     int i = start-1;
     for (int j = start; j < end; j++){
@@ -68,7 +69,7 @@ int partition (vector<double> &vec, int start, int end){
     return i+1;
 }
 
-void quick_sort(vector<double> &vec, int start, int end){
+void quick_sort(vector<float> &vec, int start, int end){
     if(start < end){
         int p = partition(vec, start, end);
         quick_sort(vec, start, p - 1);
@@ -76,27 +77,37 @@ void quick_sort(vector<double> &vec, int start, int end){
     }
 }
 
-const int n = 1e1;
-const int max_rand = 1e5;
+const long max_rand = 100000;
 
 int main(){
-    vector<double> vec(n);
+    chrono::steady_clock sc;
     random_device rd;
     mt19937 rng(rd());
     uniform_int_distribution<long> dist(-max_rand, max_rand);
-    auto gen_rand = [&dist, &rng](){return (double)dist(rng)/dist(rng);};
-    generate(vec.begin(), vec.end(), gen_rand);
+    auto gen_rand = [&dist, &rng](){return (float)dist(rng)/dist(rng);};
+    vector<long> size_array = {(long)1e7};
+    for(const long& n : size_array){
+        vector<float> vec(n);
+        generate(vec.begin(), vec.end(), gen_rand);
+        // for(const auto& el : vec) cout << el << " ";
+        vector<float> bubble_vec(vec), merge_vec(vec), quick_vec(vec);        
 
-    vector<double> bubble_vec(vec), merge_vec(vec), quick_vec(vec);
-    quick_sort(quick_vec, 0, quick_vec.size() - 1);
-    for(double val :quick_vec) cout << val << " ";
-    cout << "\n";
+        auto start = sc.now();
+        merge_sort(merge_vec, 0, merge_vec.size()-1);
+        auto end = sc.now();
+        auto time_span = static_cast<chrono::duration<float>>(end - start);
+        cout<<"merge sort: "<<time_span.count()<<"\n";
 
-    bubble_sort(bubble_vec);
-    for(double val : bubble_vec) cout << val << " ";
-    cout << "\n";
+        start = sc.now();
+        quick_sort(quick_vec, 0, quick_vec.size() - 1);
+        end = sc.now();
+        time_span = static_cast<chrono::duration<float>>(end - start);
+        cout<<"quick sort: "<<time_span.count()<<"\n";
 
-    merge_sort(merge_vec, 0, merge_vec.size()-1);
-    for(double val : merge_vec) cout << val << " ";
-    cout << "\n";
+        start = sc.now();
+        //bubble_sort(bubble_vec);
+        end = sc.now();
+        time_span = static_cast<chrono::duration<float>>(end - start);
+        cout<<"bubble sort: "<<time_span.count()<<"\n";
+    }
 }
