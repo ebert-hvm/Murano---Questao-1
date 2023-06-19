@@ -3,7 +3,6 @@
 #include <random>
 #include <algorithm>
 #define MAX_RAND 1e5
-#define N 1e1
 using namespace std;
 
 void bubble_sort(vector<double> &vec){
@@ -20,7 +19,7 @@ void bubble_sort(vector<double> &vec){
 
 void merge(vector<double> &vec, int start, int mid, int end){
     vector<double> left, right;
-    for(int i=0;i<=end;i++){
+    for(int i=start;i<=end;i++){
         if(i <= mid) left.push_back(vec[i]);
         else right.push_back(vec[i]);
     }
@@ -78,22 +77,22 @@ void quick_sort(vector<double> &vec, int start, int end){
     }
 }
 
+const int n = 1e1;
+
 int main(){
-    vector<double> vec(N);
+    vector<double> vec(n);
     random_device rd;
     mt19937 rng(rd());
     uniform_real_distribution<double> dist(-MAX_RAND, MAX_RAND);
     auto gen_rand = [&dist, &rng](){return dist(rng);};
     generate(vec.begin(), vec.end(), gen_rand);
-    for(double val :vec) cout << val << " ";
-    cout << "\n";
-    vector<double> bubble_vec(vec), merge_vec(vec), quick_vec(vec);
 
-    //quick_sort(quick_vec, 0, quick_vec.size() - 1);
+    vector<double> bubble_vec(vec), merge_vec(vec), quick_vec(vec);
+    quick_sort(quick_vec, 0, quick_vec.size() - 1);
     for(double val :quick_vec) cout << val << " ";
     cout << "\n";
 
-    //bubble_sort(bubble_vec);
+    bubble_sort(bubble_vec);
     for(double val : bubble_vec) cout << val << " ";
     cout << "\n";
 
