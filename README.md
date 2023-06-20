@@ -14,7 +14,7 @@ C++ implementation of merge sort, quick sort and bubble sort, sorting algorithms
 
 - Clone repository:
 ```
-git clone
+git clone https://github.com/ebert-hvm/Murano-Questao-1.git
 ```
 - Compile "main.cpp":
 ```
