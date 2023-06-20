@@ -1,9 +1,14 @@
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <vector>
 #include <random>
 #include <algorithm>
 #include <chrono>
+#include <limits>
 using namespace std;
+
+// BUBBLE SORT
 
 void bubble_sort(vector<float_t> &vec){
     int swap_count;
@@ -18,36 +23,6 @@ void bubble_sort(vector<float_t> &vec){
 }
 
 // MERGE SORT FUNCTIONS
-
-void merge(vector<float_t> &vec, int start, int mid, int end){
-    vector<float_t> left, right;
-    for(int i=start;i<=end;i++){
-        if(i <= mid) left.push_back(vec[i]);
-        else right.push_back(vec[i]);
-    }
-    int l = 0, r = 0, j = start;
-    while(l < left.size() && r < right.size()){
-        if(left[l] < right[r]){
-            vec[j] = left[l];
-            l++;
-        }
-        else{
-            vec[j] = right[r];
-            r++;
-        }
-        j++;
-    }
-    while(l < left.size()){
-        vec[j] = left[l];
-        j++;
-        l++;
-    }
-    while(r < right.size()){
-        vec[j] = right[r];
-        j++;
-        r++;
-    }
-}
 
 void merge_aux(vector<float_t> &vec, vector<float_t> &aux, int start, int mid, int end){
     int leftIndex = start;
@@ -134,8 +109,14 @@ int main(){
     mt19937 rng(rd());
     uniform_int_distribution<long> dist(-max_rand, max_rand);
     auto gen_rand = [&dist, &rng](){return (float)dist(rng)/dist(rng);};
-    vector<long> size_array = {(long)1e6};
+    ofstream ofs;
+    ofs.open("time_algs.txt", ios::out);
+    const int samples = 8;
+    vector<long> size_array(samples);
+    generate_n(size_array.begin(), samples, [](){static int n = 1; n *= 10; return n;});
+    ofs << fixed << setprecision(9);
     for(const long& n : size_array){
+        ofs << n << "\n";
         vector<float> vec(n);
         generate(vec.begin(), vec.end(), gen_rand);
 //        for(const auto& el : vec) cout << el << " ";
@@ -146,19 +127,23 @@ int main(){
         auto end = sc.now();
         auto time_span = static_cast<chrono::duration<float>>(end - start);
         // for(const auto& el : merge_vec) cout << el << " ";
-        cout<<"\nmerge sort: "<<time_span.count()<<"\n";
+        ofs << time_span.count()<<"\n";
 
         start = sc.now();
         quick_sort(quick_vec);
         end = sc.now();
         time_span = static_cast<chrono::duration<float>>(end - start);
         // for(const auto& el : quick_vec) cout << el << " ";
-        cout<<"\nquick sort: "<<time_span.count()<<"\n";
+        ofs << time_span.count()<<"\n";
 
-        start = sc.now();
-        //bubble_sort(bubble_vec);
-        end = sc.now();
-        time_span = static_cast<chrono::duration<float>>(end - start);
-        // cout<<"bubble sort: "<<time_span.count()<<"\n";
+        if(n < 1e6 - 1){
+            start = sc.now();
+            bubble_sort(bubble_vec);
+            end = sc.now();
+            time_span = static_cast<chrono::duration<float>>(end - start);
+            ofs << time_span.count() <<"\n";
+        }
+        else ofs << numeric_limits<float>::max() << "\n";
     }
+    ofs.close();
 }
