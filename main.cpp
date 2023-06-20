@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <chrono>
 #include <limits>
+
 using namespace std;
 
 // BUBBLE SORT
@@ -24,7 +25,7 @@ void bubble_sort(vector<float_t> &vec){
 
 // MERGE SORT FUNCTIONS
 
-void merge_aux(vector<float_t> &vec, vector<float_t> &aux, int start, int mid, int end){
+void merge(vector<float_t> &vec, vector<float_t> &aux, int start, int mid, int end){
     int leftIndex = start;
     int rightIndex = mid + 1;
     int auxIndex = start;
@@ -61,8 +62,7 @@ void merge_sort_recursion(vector<float_t> &vec, vector<float_t> &aux, int start,
         int mid = start + (end - start)/2;
         merge_sort_recursion(vec, aux, start, mid);
         merge_sort_recursion(vec, aux, mid + 1, end);
-        // merge(vec, start, mid, end);
-        merge_aux(vec, aux, start, mid, end);
+        merge(vec, aux, start, mid, end);
     }
 }
 
@@ -105,21 +105,25 @@ const long max_rand = 100000;
 
 int main(){
     chrono::steady_clock sc;
+    ofstream ofs;
+    ofs.open("time_algs.txt", ios::out);
+
     random_device rd;
     mt19937 rng(rd());
     uniform_int_distribution<long> dist(-max_rand, max_rand);
     auto gen_rand = [&dist, &rng](){return (float)dist(rng)/dist(rng);};
-    ofstream ofs;
-    ofs.open("time_algs.txt", ios::out);
-    const int samples = 8;
+
+    // It was not calculated for 10^9 elements because time execution is too high
+    const int samples = 8; 
     vector<long> size_array(samples);
     generate_n(size_array.begin(), samples, [](){static int n = 1; n *= 10; return n;});
+
     ofs << fixed << setprecision(9);
     for(const long& n : size_array){
         ofs << n << "\n";
         vector<float> vec(n);
         generate(vec.begin(), vec.end(), gen_rand);
-//        for(const auto& el : vec) cout << el << " ";
+        // for(const auto& el : vec) cout << el << " ";
         vector<float> bubble_vec(vec), merge_vec(vec), quick_vec(vec);        
 
         auto start = sc.now();
@@ -143,7 +147,11 @@ int main(){
             time_span = static_cast<chrono::duration<float>>(end - start);
             ofs << time_span.count() <<"\n";
         }
-        else ofs << numeric_limits<float>::max() << "\n";
+        else{
+            // desconsider bubble sort calculation for large number of elements
+            // because time execution is too high
+            ofs << numeric_limits<float>::max() << "\n";
+        }
     }
     ofs.close();
 }

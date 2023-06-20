@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import math
 
 with open('time_algs.txt', 'r') as f:
     cnt = 0
@@ -25,11 +24,12 @@ with open('time_algs.txt', 'r') as f:
     plt.scatter(n, quick_time, label='Quick Sort')
     plt.scatter(n, bubble_time, label='Bubble Sort')
 
-    plt.xlabel('n')
+    plt.xlabel('Number of elements')
     plt.xscale('log') 
     plt.ylabel('Time')
     plt.yscale('log') 
     plt.title('Sorting Algorithm Performance')
     plt.legend()
 
-    plt.show()
+    plt.savefig('plot.png')
+    #plt.show()
