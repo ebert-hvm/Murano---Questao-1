@@ -43,5 +43,5 @@ This will create the "plot.png" file with the time execution plot.
 - Despite the higher complexity, quick sort has an average complexity of O(nlog(n)) which explains why its performance is so close to merge sort.
 
 - It was not performed the calculation for N = 10^9 because of the high execution time for all three algorithms. However the time was measured for 8 values of N from 10 to 10^8.
-- Again, the time execution for N greater than 10^6 was too high for the bubble sort so it was ignored.
+- Again, the time execution for N greater than 10^6 was too high for the bubble sort, so it was ignored.
 

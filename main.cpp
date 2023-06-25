@@ -123,21 +123,18 @@ int main(){
         ofs << n << "\n";
         vector<float> vec(n);
         generate(vec.begin(), vec.end(), gen_rand);
-        // for(const auto& el : vec) cout << el << " ";
         vector<float> bubble_vec(vec), merge_vec(vec), quick_vec(vec);        
 
         auto start = sc.now();
         merge_sort(merge_vec);
         auto end = sc.now();
         auto time_span = static_cast<chrono::duration<float>>(end - start);
-        // for(const auto& el : merge_vec) cout << el << " ";
         ofs << time_span.count()<<"\n";
 
         start = sc.now();
         quick_sort(quick_vec);
         end = sc.now();
         time_span = static_cast<chrono::duration<float>>(end - start);
-        // for(const auto& el : quick_vec) cout << el << " ";
         ofs << time_span.count()<<"\n";
 
         if(n < 1e6 - 1){
@@ -148,7 +145,7 @@ int main(){
             ofs << time_span.count() <<"\n";
         }
         else{
-            // desconsider bubble sort calculation for large number of elements
+            // disconsider bubble sort calculation for large number of elements
             // because time execution is too high
             ofs << numeric_limits<float>::max() << "\n";
         }
