@@ -37,7 +37,7 @@ This will create the txt file with the algorithms calculations.
 python plot.py
 ```
 This will create the "plot.png" file with the time execution plot.
-## Observations
+## Comments
 - The algorithm with less complexity is the merge sort with O(nlog(n)) complexity. The bubble sort has O(n^2) complexity as well as quick sort.
 
 - Despite the higher complexity, quick sort has an average complexity of O(nlog(n)) which explains why its performance is so close to merge sort.
